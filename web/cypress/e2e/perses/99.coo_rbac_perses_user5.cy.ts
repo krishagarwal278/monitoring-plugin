@@ -1,5 +1,5 @@
 import { nav } from '../../views/nav';
-import { runCOORBACPersesTestsDevUser1 } from '../../support/perses/99.coo_rbac_perses_user1.cy';
+import { runCOORBACPersesTestsDevUser5 } from '../../support/perses/99.coo_rbac_perses_user5.cy';
 
 
 // Set constants for the operators that need to be installed for tests.
@@ -19,7 +19,7 @@ const MP = {
 };
 
 //TODO: change tag to @smoke, @dashboards, @perses when customizable-dashboards gets merged
-describe('RBAC User1: COO - Dashboards (Perses) - Administrator perspective', { tags: ['@smoke-', '@dashboards-', '@perses-dev'] }, () => {
+describe('RBAC User5: COO - Dashboards (Perses) - Administrator perspective', { tags: ['@smoke-', '@dashboards-', '@perses-dev'] }, () => {
 
   before(() => {
     //TODO: https://issues.redhat.com/browse/OCPBUGS-58468 - when it gets fixed, installation can be don using non-admin user
@@ -55,8 +55,8 @@ describe('RBAC User1: COO - Dashboards (Perses) - Administrator perspective', { 
     cy.log('Re-logging in as dev user with limited permissions');
     cy.relogin(
       Cypress.env('LOGIN_IDP_DEV_USER'),
-      Cypress.env('LOGIN_USERNAME1'),
-      Cypress.env('LOGIN_PASSWORD1'),
+      Cypress.env('LOGIN_USERNAME5'),
+      Cypress.env('LOGIN_PASSWORD5'),
     );
     cy.validateLogin();
     cy.closeOnboardingModalIfPresent();
@@ -71,7 +71,7 @@ describe('RBAC User1: COO - Dashboards (Perses) - Administrator perspective', { 
   });
 
   //TODO: rename after customizable-dashboards gets merged
-  runCOORBACPersesTestsDevUser1({
+  runCOORBACPersesTestsDevUser5({
     name: 'Administrator',
   });
 

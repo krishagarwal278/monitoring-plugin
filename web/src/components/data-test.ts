@@ -216,7 +216,7 @@ export const Classes = {
   NamespaceDropdown: '.pf-v6-c-menu-toggle.co-namespace-dropdown__menu-toggle',
   NamespaceDropdownExpanded:
     '.pf-v6-c-menu-toggle.pf-m-expanded.co-namespace-dropdown__menu-toggle',
-  PersesCreateDashboardProjectDropdown: '.pf-v6-c-menu-toggle.pf-m-full-width',
+  PersesCreateDashboardProjectDropdown: '.pf-v6-c-menu-toggle.pf-m-full-width.pf-m-typeahead',
   PersesCreateDashboardDashboardNameError: '.pf-v6-c-helper-text__item-text',
   PersesListDashboardCount: '.pf-v6-c-menu-toggle__text',
   SectionHeader: '.pf-v6-c-title.pf-m-h2, .co-section-heading',
@@ -268,6 +268,8 @@ export const persesAriaLabels = {
   AddPanelTabs: 'Panel configuration tabs',
   //List Page
   persesDashboardKebabIcon: 'Kebab toggle',
+  //dialogProjectDropdown
+  dialogProjectInput: 'Type to filter',
 };
 
 //data-testid from MUI components

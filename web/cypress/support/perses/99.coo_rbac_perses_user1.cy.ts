@@ -21,7 +21,8 @@ export function runCOORBACPersesTestsDevUser1(perspective: PerspectiveConfig) {
  * User1 has access to:
  * - openshift-cluster-observability-operator namespace as persesdashboard-editor-role and persesdatasource-editor-role
  * - observ-test namespace as persesdashboard-viewer-role and persesdatasource-viewer-role
- * - no access to perses-dev namespace
+ * - no access to perses-dev, empty-namespace3, empty-namespace4 namespaces
+ * - openshift-monitoring namespace as view role
  */
 export function testCOORBACPersesTestsDevUser1(perspective: PerspectiveConfig) {
 
@@ -31,7 +32,10 @@ export function testCOORBACPersesTestsDevUser1(perspective: PerspectiveConfig) {
     cy.assertNamespace('All Projects', true);
     cy.assertNamespace('openshift-cluster-observability-operator', true);
     cy.assertNamespace('observ-test', true);
+    cy.assertNamespace('openshift-monitoring', true);
     cy.assertNamespace('perses-dev', false);
+    cy.assertNamespace('empty-namespace3', false);
+    cy.assertNamespace('empty-namespace4', false);
 
     cy.log(`1.2. All Projects validation - Dashboard search - ${persesDashboardsDashboardDropdownCOO.ACCELERATORS_COMMON_METRICS[2]} dashboard`);
     cy.changeNamespace('All Projects');
@@ -50,6 +54,16 @@ export function testCOORBACPersesTestsDevUser1(perspective: PerspectiveConfig) {
     listPersesDashboardsPage.emptyState();
     listPersesDashboardsPage.removeTag(persesDashboardsDashboardDropdownPersesDev.PERSES_DASHBOARD_SAMPLE[0]);
     listPersesDashboardsPage.removeTag('perses-dev');
+    
+    cy.log(`1.5. All Projects validation - Dashboard search - empty state`);
+    listPersesDashboardsPage.filter.byProject('empty-namespace3');
+    listPersesDashboardsPage.emptyState();
+    listPersesDashboardsPage.removeTag('empty-namespace3');
+
+    cy.log(`1.6. All Projects validation - Dashboard search - empty state`);
+    listPersesDashboardsPage.filter.byProject('openshift-monitoring');
+    listPersesDashboardsPage.emptyState();
+    listPersesDashboardsPage.removeTag('openshift-monitoring');
 
   });
 
@@ -167,6 +181,10 @@ export function testCOORBACPersesTestsDevUser1(perspective: PerspectiveConfig) {
 
   });
 
+  /**
+   * When we have admin permission or editor permission to at least one namespace, 
+   * the Create button is always enabled and Select project dropdown is filtering out namespaces that we do not have access to
+   */
   it(`4.${perspective.name} perspective - Create button validation - Disabled / Enabled`, () => {
     cy.log(`4.1. use sidebar nav to go to Observe > Dashboards (Perses)`);
     listPersesDashboardsPage.shouldBeLoaded();
@@ -174,8 +192,17 @@ export function testCOORBACPersesTestsDevUser1(perspective: PerspectiveConfig) {
     cy.log(`4.2 change namespace to observ-test`);
     cy.changeNamespace('observ-test');
 
-    cy.log(`4.3. Verify Create button is disabled`);
-    listPersesDashboardsPage.assertCreateButtonIsDisabled();
+    cy.log(`4.3. Verify Create button is still enabled`);
+    listPersesDashboardsPage.assertCreateButtonIsEnabled();
+    listPersesDashboardsPage.clickCreateButton();
+    persesCreateDashboardsPage.createDashboardShouldBeLoaded();
+    persesCreateDashboardsPage.assertProjectDropdown('openshift-cluster-observability-operator');
+    persesCreateDashboardsPage.assertProjectNotExistsInDropdown('observ-test');
+    persesCreateDashboardsPage.assertProjectNotExistsInDropdown('perses-dev');
+    persesCreateDashboardsPage.assertProjectNotExistsInDropdown('openshift-monitoring');
+    persesCreateDashboardsPage.assertProjectNotExistsInDropdown('empty-namespace3');
+    persesCreateDashboardsPage.assertProjectNotExistsInDropdown('empty-namespace4');
+    persesCreateDashboardsPage.createDashboardDialogCancelButton();
 
     cy.log(`4.4 change namespace to openshift-cluster-observability-operator`);
     cy.changeNamespace('openshift-cluster-observability-operator');
@@ -183,15 +210,13 @@ export function testCOORBACPersesTestsDevUser1(perspective: PerspectiveConfig) {
     cy.log(`4.5. Verify Create button is enabled`);
     listPersesDashboardsPage.assertCreateButtonIsEnabled();
 
-    cy.log(`4.2 change namespace to All Projects`);
+    cy.log(`4.6 change namespace to All Projects`);
     cy.changeNamespace('All Projects');
 
-    cy.log(`4.3. Verify Create button is enabled`);
+    cy.log(`4.7. Verify Create button is enabled`);
     listPersesDashboardsPage.assertCreateButtonIsEnabled();
 
   });
-
-  //TODO: OU-1195 Create, Duplicate - Project dropdown 
 
   it(`5.${perspective.name} perspective - Create Dashboard with panel groups, panels and variables`, () => {
     let dashboardName = 'Testing Dashboard - UP ';
@@ -200,7 +225,6 @@ export function testCOORBACPersesTestsDevUser1(perspective: PerspectiveConfig) {
     cy.log(`5.1. use sidebar nav to go to Observe > Dashboards (Perses)`);
     listPersesDashboardsPage.shouldBeLoaded();
 
-    //TODO: uncomment when but gets fixed
     cy.changeNamespace('openshift-cluster-observability-operator');
 
     cy.log(`5.2. Click on Create button`);
@@ -386,7 +410,6 @@ export function testCOORBACPersesTestsDevUser1(perspective: PerspectiveConfig) {
     
   });
 
-  //TODO: OU-1195 Create, Duplicate - Project dropdown 
   it(`8.${perspective.name} perspective - Duplicate and verify project dropdown and Delete`, () => {
     let dashboardName = 'Duplicate dashboard ';
     let randomSuffix = Math.random().toString(5);
@@ -407,12 +430,16 @@ export function testCOORBACPersesTestsDevUser1(perspective: PerspectiveConfig) {
     listPersesDashboardsPage.clickDuplicateOption();
 
     cy.log(`8.5. Assert project dropdown options`);
-    listPersesDashboardsPage.assertDuplicateProjectDropdownOptions('openshift-cluster-observability-operator', true);
-    listPersesDashboardsPage.assertDuplicateProjectDropdownOptions('observ-test', false);
-    listPersesDashboardsPage.assertDuplicateProjectDropdownOptions('perses-dev', false);
+    listPersesDashboardsPage.assertDuplicateProjectDropdownExists('openshift-cluster-observability-operator');
+    listPersesDashboardsPage.assertDuplicateProjectDropdownNotExists('observ-test');
+    listPersesDashboardsPage.assertDuplicateProjectDropdownNotExists('perses-dev');
+    listPersesDashboardsPage.assertDuplicateProjectDropdownNotExists('empty-namespace3');
+    listPersesDashboardsPage.assertDuplicateProjectDropdownNotExists('empty-namespace4');
+    listPersesDashboardsPage.assertDuplicateProjectDropdownNotExists('openshift-monitoring');
 
     cy.log(`8.6. Enter new dashboard name`);
     listPersesDashboardsPage.duplicateDashboardEnterName(dashboardName);
+    listPersesDashboardsPage.duplicateDashboardSelectProjectDropdown('openshift-cluster-observability-operator');
     listPersesDashboardsPage.duplicateDashboardDuplicateButton();
     persesDashboardsPage.shouldBeLoadedEditionMode(dashboardName);
     persesDashboardsPage.shouldBeLoadedAfterDuplicate(dashboardName);

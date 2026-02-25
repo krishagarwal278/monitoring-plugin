@@ -18,6 +18,10 @@ Cypress.Commands.add('setupPersesRBACandExtraDashboards', () => {
         env: {
           USER1: `${Cypress.env('LOGIN_USERNAME1')}`,
           USER2: `${Cypress.env('LOGIN_USERNAME2')}`,
+          USER3: `${Cypress.env('LOGIN_USERNAME3')}`,
+          USER4: `${Cypress.env('LOGIN_USERNAME4')}`,
+          USER5: `${Cypress.env('LOGIN_USERNAME5')}`,
+          USER6: `${Cypress.env('LOGIN_USERNAME6')}`,
         },
       }
     );

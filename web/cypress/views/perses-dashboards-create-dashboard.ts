@@ -1,4 +1,4 @@
-import { Classes, IDs } from "../../src/components/data-test";
+import { Classes, IDs, persesAriaLabels } from "../../src/components/data-test";
 import { persesCreateDashboard, persesDashboardsModalTitles } from "../fixtures/perses/constants";
 
 export const persesCreateDashboardsPage = {
@@ -15,20 +15,22 @@ export const persesCreateDashboardsPage = {
   selectProject: (project: string) => {
     cy.log('persesCreateDashboardsPage.selectProject');
     cy.get(Classes.PersesCreateDashboardProjectDropdown).should('be.visible').click({ force: true });
-    cy.byPFRole('menuitem').contains(project).should('be.visible').click({ force: true });
+    cy.byAriaLabel(persesAriaLabels.dialogProjectInput).clear().type(project);
+    cy.byPFRole('option').contains(project).should('be.visible').click({ force: true });
   },
   
   assertProjectDropdown: (project: string) => {
     cy.log('persesCreateDashboardsPage.assertProjectDropdown');
     cy.get(Classes.PersesCreateDashboardProjectDropdown).should('be.visible').click({ force: true });
-    cy.byPFRole('menuitem').contains(project).should('be.visible');
+    cy.byAriaLabel(persesAriaLabels.dialogProjectInput).clear().type(project);
+    cy.byPFRole('option').contains(project).should('be.visible');
     cy.get(Classes.PersesCreateDashboardProjectDropdown).should('be.visible').click({ force: true });
   },
 
   assertProjectNotExistsInDropdown: (project: string) => {
     cy.log('persesCreateDashboardsPage.assertProjectNotExistsInDropdown');
     cy.get(Classes.PersesCreateDashboardProjectDropdown).should('be.visible').click({ force: true });
-    cy.byPFRole('menu').find('li').then((items) => {
+    cy.byPFRole('listbox').find('li').then((items) => {
       items.each((index, item) => {
         cy.log('Project: ' + item.innerText);
         if (item.innerText === project) {
@@ -62,6 +64,12 @@ export const persesCreateDashboardsPage = {
     } else {
       cy.byPFRole('dialog').find(Classes.PersesCreateDashboardDashboardNameError).should('have.text', `${persesCreateDashboard.DIALOG_DUPLICATED_NAME_PF_VALIDATION_PREFIX}"${dashboardName}"${persesCreateDashboard.DIALOG_DUPLICATED_NAME_PF_VALIDATION_SUFFIX}`).should('be.visible');
     }
+  },
+
+  createDashboardDialogCancelButton: () => {
+    cy.log('persesCreateDashboardsPage.clickCancelButton');
+    cy.byPFRole('dialog').find('button').contains('Cancel').should('be.visible').click({ force: true });
+    cy.wait(2000);
   },
 
 }

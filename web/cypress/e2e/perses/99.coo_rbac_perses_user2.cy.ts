@@ -19,7 +19,7 @@ const MP = {
 };
 
 //TODO: change tag to @smoke, @dashboards, @perses when customizable-dashboards gets merged
-describe('BVT: COO - Dashboards (Perses) - Administrator perspective', { tags: ['@smoke-', '@dashboards-', '@perses-dev'] }, () => {
+describe('RBAC User2: COO - Dashboards (Perses) - Administrator perspective', { tags: ['@smoke-', '@dashboards-', '@perses-dev'] }, () => {
 
   before(() => {
     //TODO: https://issues.redhat.com/browse/OCPBUGS-58468 - when it gets fixed, installation can be don using non-admin user
@@ -64,6 +64,7 @@ describe('BVT: COO - Dashboards (Perses) - Administrator perspective', { tags: [
 
   beforeEach(() => {
     nav.sidenav.clickNavLink(['Observe', 'Dashboards (Perses)']);
+    cy.changeNamespace('All Projects');
   });
 
   after(() => {

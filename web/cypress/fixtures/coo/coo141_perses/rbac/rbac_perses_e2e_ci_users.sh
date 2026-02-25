@@ -3,9 +3,15 @@
 # User variables (passed as arguments)
 USER1="${USER1}"
 USER2="${USER2}"
+USER3="${USER3}"
+USER4="${USER4}"
+USER5="${USER5}"
+USER6="${USER6}"
 
-oc new-project perses-dev
-oc new-project observ-test
+oc create namespace perses-dev 2>/dev/null || true
+oc create namespace observ-test 2>/dev/null || true 
+oc create namespace empty-namespace3 2>/dev/null || true
+oc create namespace empty-namespace4 2>/dev/null || true
 
 oc apply -f - <<EOF
 kind: ClusterRole
@@ -1038,15 +1044,16 @@ rules:
   - "update"
 EOF
 
+
 oc apply -f - <<EOF
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: $USER1-perses-prometheus-api-editor
+  name: user1-perses-prometheus-api-editor
 subjects:
   - kind: User
     apiGroup: rbac.authorization.k8s.io
-    name: $USER1
+    name: ${USER1}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -1057,11 +1064,71 @@ oc apply -f - <<EOF
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: $USER2-perses-prometheus-api-editor
+  name: user2-perses-prometheus-api-editor
 subjects:
   - kind: User
     apiGroup: rbac.authorization.k8s.io
-    name: $USER2
+    name: ${USER2}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: perses-prometheus-api-editor
+EOF
+
+oc apply -f - <<EOF
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: user3-perses-prometheus-api-editor
+subjects:
+  - kind: User
+    apiGroup: rbac.authorization.k8s.io
+    name: ${USER3}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: perses-prometheus-api-editor
+EOF
+
+oc apply -f - <<EOF
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: user4-perses-prometheus-api-editor
+subjects:
+  - kind: User
+    apiGroup: rbac.authorization.k8s.io
+    name: ${USER4}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: perses-prometheus-api-editor
+EOF
+
+oc apply -f - <<EOF
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: user5-perses-prometheus-api-editor
+subjects:
+  - kind: User
+    apiGroup: rbac.authorization.k8s.io
+    name: ${USER5}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: perses-prometheus-api-editor
+EOF
+
+oc apply -f - <<EOF
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: user6-perses-prometheus-api-editor
+subjects:
+  - kind: User
+    apiGroup: rbac.authorization.k8s.io
+    name: ${USER6}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -1073,11 +1140,11 @@ oc apply -f - <<EOF
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: $USER1-persesglobaldatasource-viewer
+  name: user1-persesglobaldatasource-viewer
 subjects:
   - kind: User
     apiGroup: rbac.authorization.k8s.io
-    name: $USER1
+    name: ${USER1}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -1088,11 +1155,71 @@ oc apply -f - <<EOF
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: $USER2-persesglobaldatasource-viewer
+  name: user2-persesglobaldatasource-viewer
 subjects:
   - kind: User
     apiGroup: rbac.authorization.k8s.io
-    name: $USER2
+    name: ${USER2}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: persesglobaldatasource-viewer-role
+EOF
+
+oc apply -f - <<EOF
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: user3-persesglobaldatasource-viewer
+subjects:
+  - kind: User
+    apiGroup: rbac.authorization.k8s.io
+    name: ${USER3}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: persesglobaldatasource-viewer-role
+EOF
+
+oc apply -f - <<EOF
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: user4-persesglobaldatasource-viewer
+subjects:
+  - kind: User
+    apiGroup: rbac.authorization.k8s.io
+    name: ${USER4}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: persesglobaldatasource-viewer-role
+EOF
+
+oc apply -f - <<EOF
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: user5-persesglobaldatasource-viewer
+subjects:
+  - kind: User
+    apiGroup: rbac.authorization.k8s.io
+    name: ${USER5}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: persesglobaldatasource-viewer-role
+EOF
+
+oc apply -f - <<EOF
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: user6-persesglobaldatasource-viewer
+subjects:
+  - kind: User
+    apiGroup: rbac.authorization.k8s.io
+    name: ${USER6}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -1103,12 +1230,12 @@ oc apply -f - <<EOF
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: $USER1-viewer-dashboard-observ-test
+  name: user1-viewer-dashboard-observ-test
   namespace: observ-test
 subjects:
   - kind: User
     apiGroup: rbac.authorization.k8s.io
-    name: $USER1
+    name: ${USER1}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -1119,12 +1246,12 @@ oc apply -f - <<EOF
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: $USER1-editor-dashboard
+  name: user1-editor-dashboard
   namespace: openshift-cluster-observability-operator
 subjects:
   - kind: User
     apiGroup: rbac.authorization.k8s.io
-    name: $USER1
+    name: ${USER1}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -1135,12 +1262,12 @@ oc apply -f - <<EOF
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: $USER2-viewer-dashboard
+  name: user2-viewer-dashboard
   namespace: perses-dev
 subjects:
   - kind: User
     apiGroup: rbac.authorization.k8s.io
-    name: $USER2
+    name: ${USER2}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -1151,12 +1278,44 @@ oc apply -f - <<EOF
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: $USER1-editor-datasource
+  name: user3-editor-dashboard
+  namespace: empty-namespace3
+subjects:
+  - kind: User
+    apiGroup: rbac.authorization.k8s.io
+    name: ${USER3}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: persesdashboard-editor-role
+EOF
+
+oc apply -f - <<EOF
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: user4-viewer-dashboard
+  namespace: empty-namespace4
+subjects:
+  - kind: User
+    apiGroup: rbac.authorization.k8s.io
+    name: ${USER4}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: persesdashboard-viewer-role
+EOF
+
+oc apply -f - <<EOF
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: user1-editor-datasource
   namespace: openshift-cluster-observability-operator
 subjects:
   - kind: User
     apiGroup: rbac.authorization.k8s.io
-    name: $USER1
+    name: ${USER1}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -1167,12 +1326,12 @@ oc apply -f - <<EOF
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: $USER1-viewer-datasource-observ-test
+  name: user1-viewer-datasource
   namespace: observ-test
 subjects:
   - kind: User
     apiGroup: rbac.authorization.k8s.io
-    name: $USER1
+    name: ${USER1}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -1183,14 +1342,52 @@ oc apply -f - <<EOF
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: $USER2-viewer-datasource
+  name: user2-viewer-datasource
   namespace: perses-dev
 subjects:
   - kind: User
     apiGroup: rbac.authorization.k8s.io
-    name: $USER2
+    name: ${USER2}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: persesdatasource-viewer-role
 EOF
+
+oc apply -f - <<EOF
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: user3-editor-datasource
+  namespace: empty-namespace3
+subjects:
+  - kind: User
+    apiGroup: rbac.authorization.k8s.io
+    name: ${USER3}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: persesdatasource-editor-role
+EOF
+
+oc apply -f - <<EOF
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: user4-viewer-datasource
+  namespace: empty-namespace4
+subjects:
+  - kind: User
+    apiGroup: rbac.authorization.k8s.io
+    name: ${USER4}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: persesdatasource-viewer-role
+EOF
+
+oc -n openshift-monitoring policy add-role-to-user view ${USER1}
+oc -n openshift-monitoring policy add-role-to-user view ${USER2}
+oc -n openshift-monitoring policy add-role-to-user view ${USER3}
+oc -n openshift-monitoring policy add-role-to-user view ${USER4}
+oc -n openshift-monitoring policy add-role-to-user admin ${USER5}

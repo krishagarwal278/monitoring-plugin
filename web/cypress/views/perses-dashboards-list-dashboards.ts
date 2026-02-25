@@ -1,6 +1,6 @@
 import { commonPages } from "./common";
-import { DataTestIDs, Classes, listPersesDashboardsOUIAIDs, listPersesDashboardsDataTestIDs, IDs, persesAriaLabels } from "../../src/components/data-test";
-import { listPersesDashboardsEmptyState, listPersesDashboardsPageSubtitle, persesDashboardsDuplicateDashboard, persesDashboardsRenameDashboard } from "../fixtures/perses/constants";
+import { DataTestIDs, Classes, listPersesDashboardsOUIAIDs, listPersesDashboardsDataTestIDs, IDs, persesAriaLabels, LegacyTestIDs } from "../../src/components/data-test";
+import { listPersesDashboardsEmptyState, listPersesDashboardsNoDashboardsFoundState, listPersesDashboardsPageSubtitle, persesDashboardsDuplicateDashboard, persesDashboardsRenameDashboard } from "../fixtures/perses/constants";
 import { MonitoringPageTitles } from "../fixtures/monitoring/constants";
 
 export const listPersesDashboardsPage = {
@@ -10,6 +10,13 @@ export const listPersesDashboardsPage = {
     cy.byTestID(listPersesDashboardsDataTestIDs.EmptyStateTitle).should('be.visible').contains(listPersesDashboardsEmptyState.TITLE);
     cy.byTestID(listPersesDashboardsDataTestIDs.EmptyStateBody).should('be.visible').contains(listPersesDashboardsEmptyState.BODY);
     cy.byTestID(listPersesDashboardsDataTestIDs.ClearAllFiltersButton).should('be.visible');
+  },
+
+  noDashboardsFoundState: () => {
+    cy.log('listPersesDashboardsPage.noDashboardsFoundState');
+    cy.byTestID(listPersesDashboardsDataTestIDs.EmptyStateTitle).should('be.visible').contains(listPersesDashboardsNoDashboardsFoundState.TITLE);
+    cy.byTestID(listPersesDashboardsDataTestIDs.EmptyStateBody).should('be.visible').contains(listPersesDashboardsNoDashboardsFoundState.BODY);
+    cy.byTestID(listPersesDashboardsDataTestIDs.ClearAllFiltersButton).should('not.exist');
   },
 
   shouldBeLoaded: () => {
@@ -205,20 +212,31 @@ export const listPersesDashboardsPage = {
   duplicateDashboardSelectProjectDropdown: (project: string) => {
     cy.log('listPersesDashboardsPage.duplicateDashboardSelectProjectDropdown');
     cy.get(Classes.PersesCreateDashboardProjectDropdown).should('be.visible').click({ force: true });
+    cy.byAriaLabel(persesAriaLabels.dialogProjectInput).clear().type(project);
     cy.byPFRole('option').contains(project).should('be.visible').click({ force: true });
     cy.wait(2000);
   },
 
-  assertDuplicateProjectDropdownOptions: (project: string, contains: boolean) => {
-    cy.log('listPersesDashboardsPage.assertDuplicateProjectDropdownOptions');
+  assertDuplicateProjectDropdownExists: (project: string) => {
+    cy.log('listPersesDashboardsPage.assertDuplicateProjectDropdownExists');
     cy.get(Classes.PersesCreateDashboardProjectDropdown).should('be.visible').click({ force: true });
-    if (contains) {
-      cy.byPFRole('option').contains(project).should('be.visible');
-      cy.log('Project: ' + project + ' is available in the dropdown');
-    } else {
-      cy.byPFRole('option').should('not.contain', project);
-      cy.log('Project: ' + project + ' is not available in the dropdown');
-    }
+    cy.byAriaLabel(persesAriaLabels.dialogProjectInput).clear().type(project);
+    cy.byPFRole('option').contains(project).should('be.visible');
+    cy.log('Project: ' + project + ' is available in the dropdown');
+    cy.get(Classes.PersesCreateDashboardProjectDropdown).should('be.visible').click({ force: true });
+  },
+
+  assertDuplicateProjectDropdownNotExists: (project: string) => {
+    cy.log('listPersesDashboardsPage.assertDuplicateProjectDropdownNotExists');
+    cy.get(Classes.PersesCreateDashboardProjectDropdown).should('be.visible').click({ force: true });
+    cy.byPFRole('listbox').find('li').then((items) => {
+      items.each((index, item) => {
+        cy.log('Project: ' + item.innerText);
+        if (item.innerText === project) {
+          expect(item).to.not.exist;
+        }
+      });
+    });
     cy.get(Classes.PersesCreateDashboardProjectDropdown).should('be.visible').click({ force: true });
   },
 
@@ -238,5 +256,11 @@ export const listPersesDashboardsPage = {
     cy.log('listPersesDashboardsPage.deleteDashboardDelete');
     cy.byPFRole('dialog').find('button').contains('Delete').should('be.visible').click({ force: true });
     cy.wait(2000);
+  },
+
+  projectDropdownNotExists: () => {
+    cy.log('listPersesDashboardsPage.projectDropdownNotExists');
+    cy.byLegacyTestID(LegacyTestIDs.NamespaceBarDropdown).should('not.exist');
+    cy.get(Classes.NamespaceDropdown).should('not.exist');
   },
 } 

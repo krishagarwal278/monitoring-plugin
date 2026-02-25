@@ -15,6 +15,7 @@ export function runCOORBACPersesTestsDevUser2(perspective: PerspectiveConfig) {
  * User2 has access to:
  * - perses-dev namespace as persesdashboard-viewer-role and persesdatasource-viewer-role
  * - no access to openshift-cluster-observability-operator and observ-test namespaces
+ * - openshift-monitoring as view role
  */
 export function testCOORBACPersesTestsDevUser2(perspective: PerspectiveConfig) {
 
@@ -24,6 +25,9 @@ export function testCOORBACPersesTestsDevUser2(perspective: PerspectiveConfig) {
     cy.assertNamespace('All Projects', true);
     cy.assertNamespace('openshift-cluster-observability-operator', false);
     cy.assertNamespace('observ-test', false);
+    cy.assertNamespace('empty-namespace3', false);
+    cy.assertNamespace('empty-namespace4', false);
+    cy.assertNamespace('openshift-monitoring', true);
     cy.assertNamespace('perses-dev', true);
 
     cy.log(`1.2. All Projects validation - Dashboard search - ${persesDashboardsDashboardDropdownPersesDev.PERSES_DASHBOARD_SAMPLE[2]} dashboard`);
@@ -50,6 +54,16 @@ export function testCOORBACPersesTestsDevUser2(perspective: PerspectiveConfig) {
     listPersesDashboardsPage.filter.byName(persesDashboardsDashboardDropdownCOO.K8S_COMPUTE_RESOURCES_CLUSTER[0]);
     listPersesDashboardsPage.emptyState();
     listPersesDashboardsPage.removeTag(persesDashboardsDashboardDropdownCOO.K8S_COMPUTE_RESOURCES_CLUSTER[0]);
+
+    cy.log(`1.5. All Projects validation - Dashboard search - empty state`);
+    listPersesDashboardsPage.filter.byProject('empty-namespace4');
+    listPersesDashboardsPage.emptyState();
+    listPersesDashboardsPage.removeTag('empty-namespace4');
+
+    cy.log(`1.6. All Projects validation - Dashboard search - empty state`);
+    listPersesDashboardsPage.filter.byProject('openshift-monitoring');
+    listPersesDashboardsPage.emptyState();
+    listPersesDashboardsPage.removeTag('openshift-monitoring');
 
   });
 
@@ -83,6 +97,10 @@ export function testCOORBACPersesTestsDevUser2(perspective: PerspectiveConfig) {
     cy.changeNamespace('perses-dev');
 
     cy.log(`3.4. Verify Create button is disabled`);
+    listPersesDashboardsPage.assertCreateButtonIsDisabled();
+
+    cy.log(`3.5. Change namespace to openshift-monitoring`);
+    cy.changeNamespace('openshift-monitoring');
     listPersesDashboardsPage.assertCreateButtonIsDisabled();
 
   });

@@ -50,6 +50,11 @@ export const listPersesDashboardsEmptyState = {
 
 }
 
+export const listPersesDashboardsNoDashboardsFoundState = {
+  TITLE: 'No dashboards found',
+  BODY: 'No Perses dashboards are currently available in this project.',
+}
+
 export const persesDashboardsModalTitles ={
   EDIT_DASHBOARD_VARIABLES: 'Edit Dashboard Variables',
   DASHBOARD_BUILT_IN_VARIABLES: 'Dashboard Built-in Variables',

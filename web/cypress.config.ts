@@ -4,6 +4,13 @@ import * as console from 'console';
 import * as path from 'path';
 import registerCypressGrep from '@cypress/grep/src/plugin';
 
+const getLoginCredentials = (index: number): { username: string; password: string } => {
+  const users = (process.env.CYPRESS_LOGIN_USERS || '').split(',').filter(Boolean);
+  const userEntry = users[index] || '';
+  const [username = '', password = ''] = userEntry.split(':');
+  return { username, password };
+};
+
 export default defineConfig({
   screenshotsFolder: './cypress/screenshots',
   screenshotOnRunFailure: true,
@@ -22,15 +29,23 @@ export default defineConfig({
     ),
     // User 0 credentials - as kubeadmin or even non-admin user
     // specifically for perses e2e tests, user0 is considered as console admin user to install COO and create RBAC roles and bindings
-    LOGIN_USERNAME: (process.env.CYPRESS_LOGIN_USERS || '').split(',')[0]?.split(':')[0] || '',
-    LOGIN_PASSWORD: (process.env.CYPRESS_LOGIN_USERS || '').split(',')[0]?.split(':')[1] || '',
+    LOGIN_USERNAME: getLoginCredentials(0).username,
+    LOGIN_PASSWORD: getLoginCredentials(0).password,
     // User 1 credentials
     // User 2 credentials
     // specifically for perses e2e tests, user1 and user2 are considered as perses e2e users to test RBAC access to dashboards
-    LOGIN_USERNAME1: (process.env.CYPRESS_LOGIN_USERS || '').split(',')[1]?.split(':')[0] || '',
-    LOGIN_PASSWORD1: (process.env.CYPRESS_LOGIN_USERS || '').split(',')[1]?.split(':')[1] || '',
-    LOGIN_USERNAME2: (process.env.CYPRESS_LOGIN_USERS || '').split(',')[2]?.split(':')[0] || '',
-    LOGIN_PASSWORD2: (process.env.CYPRESS_LOGIN_USERS || '').split(',')[2]?.split(':')[1] || '',
+    LOGIN_USERNAME1: getLoginCredentials(1).username,
+    LOGIN_PASSWORD1: getLoginCredentials(1).password,
+    LOGIN_USERNAME2: getLoginCredentials(2).username,
+    LOGIN_PASSWORD2: getLoginCredentials(2).password,
+    LOGIN_USERNAME3: getLoginCredentials(3).username,
+    LOGIN_PASSWORD3: getLoginCredentials(3).password,
+    LOGIN_USERNAME4: getLoginCredentials(4).username,
+    LOGIN_PASSWORD4: getLoginCredentials(4).password,
+    LOGIN_USERNAME5: getLoginCredentials(5).username,
+    LOGIN_PASSWORD5: getLoginCredentials(5).password,
+    LOGIN_USERNAME6: getLoginCredentials(6).username,
+    LOGIN_PASSWORD6: getLoginCredentials(6).password,
     TIMEZONE: process.env.CYPRESS_TIMEZONE || 'UTC',
     MOCK_NEW_METRICS: process.env.CYPRESS_MOCK_NEW_METRICS || 'false',
     COO_NAMESPACE: process.env.CYPRESS_COO_NAMESPACE || 'openshift-cluster-observability-operator',
