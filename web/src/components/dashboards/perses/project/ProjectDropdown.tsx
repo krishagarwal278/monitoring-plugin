@@ -19,11 +19,21 @@ import { useTranslation } from 'react-i18next';
 import ProjectMenuToggle from './ProjectMenuToggle';
 import { alphanumericCompare } from './utils';
 import { useEditableProjects } from '../hooks/useEditableProjects';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import {
+  ChangeEvent,
+  FC,
+  MutableRefObject,
+  MouseEvent as ReactMouseEvent,
+  Ref,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { ALL_NAMESPACES_KEY } from '../../../utils';
 
-export const NoResults: React.FC<{
-  onClear: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+export const NoResults: FC<{
+  onClear: (event: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }> = ({ onClear }) => {
   const { t } = useTranslation(process.env.I18N_NAMESPACE);
   return (
@@ -45,8 +55,8 @@ export const NoResults: React.FC<{
 
 /* ****************************************** */
 
-export const Filter: React.FC<{
-  filterRef: React.Ref<any>;
+export const Filter: FC<{
+  filterRef: Ref<any>;
   onFilterChange: (filterText: string) => void;
   filterText: string;
 }> = ({ filterText, filterRef, onFilterChange }) => {
@@ -71,7 +81,7 @@ export const Filter: React.FC<{
 
 /* ****************************************** */
 
-export const ProjectGroup: React.FC<{
+export const ProjectGroup: FC<{
   options: { key: string; title: string }[];
   selectedKey: string;
 }> = ({ options, selectedKey }) => {
@@ -102,11 +112,11 @@ export const ProjectGroup: React.FC<{
 
 /* ****************************************** */
 
-const ProjectMenu: React.FC<{
+const ProjectMenu: FC<{
   setOpen: (isOpen: boolean) => void;
-  onSelect: (event: React.MouseEvent, itemId: string) => void;
+  onSelect: (event: ReactMouseEvent, itemId: string) => void;
   selected?: string;
-  menuRef: React.MutableRefObject<HTMLDivElement>;
+  menuRef: MutableRefObject<HTMLDivElement>;
 }> = ({ setOpen, onSelect, selected, menuRef }) => {
   const filterRef = useRef(null);
   const { t } = useTranslation(process.env.I18N_NAMESPACE);
@@ -155,7 +165,7 @@ const ProjectMenu: React.FC<{
     <Menu
       ref={menuRef}
       className="co-namespace-dropdown__menu"
-      onSelect={(event: React.MouseEvent, itemId: string) => {
+      onSelect={(event: ReactMouseEvent, itemId: string) => {
         setOpen(false);
         onSelect(event, itemId);
       }}
@@ -183,12 +193,7 @@ const ProjectMenu: React.FC<{
 
 /* ****************************************** */
 
-const ProjectDropdown: React.FC<ProjectDropdownProps> = ({
-  disabled,
-  onSelect,
-  selected,
-  shortCut,
-}) => {
+const ProjectDropdown: FC<ProjectDropdownProps> = ({ disabled, onSelect, selected, shortCut }) => {
   const { t } = useTranslation(process.env.I18N_NAMESPACE);
   const menuRef = useRef(null);
   const [isOpen, setOpen] = useState(false);
@@ -226,7 +231,7 @@ const ProjectDropdown: React.FC<ProjectDropdownProps> = ({
 
 type ProjectDropdownProps = {
   disabled?: boolean;
-  onSelect?: (event: React.MouseEvent | React.ChangeEvent, value: string) => void;
+  onSelect?: (event: ReactMouseEvent | ChangeEvent, value: string) => void;
   shortCut?: string;
   selected?: string;
 };

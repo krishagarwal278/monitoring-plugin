@@ -60,14 +60,6 @@ const AggregateAlertTableRow: AggregateAlertTableRowProps = ({
       title: t('Source'),
       id: 'alert-source',
     },
-    ...(isACMPerspective
-      ? [
-          {
-            title: t('Cluster'),
-            id: 'alert-cluster',
-          },
-        ]
-      : []),
     {
       title: '',
       id: 'actions',
